@@ -10,26 +10,26 @@ These instructions will get you a copy of the project up and running on your loc
 
 To run KeyTunes, you will need to have the following installed on your system:
 
-- **Node.js** - [Download & Install Node.js](https://nodejs.org/en/download/)
-- **Yarn** - Yarn is a fast, reliable, and secure dependency management tool. [Download & Install Yarn](https://yarnpkg.com/getting-started/install)
+- [Node.js](https://nodejs.org/en/download/)
+- [Yarn](https://yarnpkg.com/getting-started/install)
 
 ### Installation
 
 Follow these steps to set up your local development environment:
 
-1. **Clone the repository**
+**Clone the repository**
 
 ```sh
 git clone https://github.com/lfelipediniz/KeyTunes.git
 ```
 
-2. **Navigate to the project directory**
+**Navigate to the project directory**
 
 ```sh
 cd KeyTunes
 ```
 
-3. **Install dependencies**
+**Install dependencies**
 
 With Yarn installed, run the following command in your project directory:
 
@@ -43,12 +43,12 @@ This will install all the necessary dependencies for the project.
 
 To run KeyTunes on your local machine, follow these steps:
 
-1. **Start the development server**
+**Start the development server**
 
 ```sh
 yarn dev
 ```
 
-2. **Open your browser**
+**Open your browser**
 
 Navigate to `http://localhost:3000` to view the application. You should now be able to use your keyboard to play the virtual piano.
