@@ -13,14 +13,13 @@ const Piano: React.FC = () => {
       .catch((error) => console.error('Erro ao carregar as teclas do piano', error));
   }, []);
 
-  const playAudio = (noteId:string) => {
+  const playAudio = (noteId: string) => {
     const audio = new Audio(`/notes/${noteId}.wav`);
     audio.play().catch(error => console.error("Erro ao tentar reproduzir o áudio", error));
   };
 
   // function that handles the click event on the piano keys
   const handleKeyClick = (event: React.MouseEvent<HTMLDivElement>) => {
-    // check if the target is a piano key
     const target = event.target as HTMLElement;
     if (target.dataset.noteId) {
       playAudio(target.dataset.noteId);
@@ -28,50 +27,19 @@ const Piano: React.FC = () => {
   };
 
   return (
-    <div onClick={handleKeyClick}>
-      {Object.entries(keyMap).map(([key, noteId]:any) => (
-        <button
-          key={key}
-          className={noteId.includes('s') ? 'blackKey' : 'whiteKey'}
-          data-note-id={noteId}
-        >
-          {noteId}
-        </button>
+    <div onClick={handleKeyClick} className="flex relative select-none">
+      {Object.entries(keyMap).map(([key, noteId]: any) => (
+        <div key={key} className="relative">
+          <button
+            className={`border border-black cursor-pointer flex justify-center items-end ${noteId.includes('s') ? 'bg-black text-white h-24 w-5 z-20 absolute top-0 left-1/2 transform -translate-x-1/2' : 'bg-white text-black h-40 w-8 mr-1 z-10'}`}
+            data-note-id={noteId}
+            onClick={() => playAudio(noteId)}
+            style={{ paddingBottom: '1rem' }}
+          >
+            {noteId}
+          </button>
+        </div>
       ))}
-      <style>
-      {`
-        .whiteKey, .blackKey {
-            border: 1px solid #000;
-            cursor: pointer;
-            position: relative;
-            }
-        
-        .whiteKey {
-            background-color: #fff;
-            height: 100px;
-            width: 30px;
-            margin-right: 1px;
-            z-index: 1;
-            color: #000;   
-            padding-top: 60px;
-            }
-        
-        .blackKey {
-            background-color: #000;
-            height: 60px;
-            width: 20px;
-            margin-left: -10px;
-            z-index: 2;
-            position: absolute;
-            font-size: 0.8em;
-            }
-        
-        .blackKey:not(:last-child) {
-            margin-right: 40px;
-            }
-                      
-    `}
-      </style>
     </div>
   );
 };
