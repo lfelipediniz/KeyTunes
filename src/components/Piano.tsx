@@ -1,6 +1,5 @@
 'use client'; // this is a client-side component
 import React, { useState, useEffect } from 'react';
-import keys from '../../public/defaultKeys.json'; // Import the default keys from the JSON file
 
 const Piano: React.FC = () => {
   const [keyMap, setKeyMap] = useState({});
