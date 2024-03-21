@@ -97,21 +97,22 @@ const Piano: React.FC = () => {
       {Object.entries(keyMap["side1"] || {}).map(([key, noteId]) => (
         <div key={key} className="relative">
           <button
-            key={key}
-            className={`border border-black cursor-pointer flex justify-center items-end ${
-              noteId.includes("s")
-                ? "bg-black text-white h-24 w-5 z-20 absolute top-0 left-1/2 transform -translate-x-1/2"
-                : "bg-white text-black h-40 w-8 mr-1 z-10"
-            }`}
+            className={`border border-black cursor-pointer flex justify-center items-end
+        ${
+          noteId.includes("s")
+            ? `${
+                activeKey === key && isBracketPressed
+                  ? "bg-blue-500 text-white h-24 w-5 z-20 absolute top-0 left-1/2 transform -translate-x-1/2"
+                  : "bg-black text-white h-24 w-5 z-20 absolute top-0 left-1/2 transform -translate-x-1/2"
+              }`
+            : `${
+                activeKey === key && isBracketPressed
+                  ? "bg-blue-500 text-white h-40 w-8 mr-1 z-10"
+                  : "bg-white text-black h-40 w-8 mr-1 z-10"
+              }`
+        }`}
             data-note-id={noteId}
             onClick={handleKeyClick}
-            // when the "[" key is pressed and the active key is the same as the current key, change the background color
-            style={{
-              paddingBottom: "1rem",
-              backgroundColor:
-                activeKey === key && isBracketPressed ? "#42a4eb" : null,
-              color: activeKey === key && isBracketPressed ? "white" : null,
-            }}
           >
             {noteId}
           </button>
@@ -121,25 +122,22 @@ const Piano: React.FC = () => {
       {Object.entries(keyMap["side2"] || {}).map(([key, noteId]) => (
         <div key={key} className="relative">
           <button
-            key={key}
-            className={`border border-black cursor-pointer flex justify-center items-end ${
-              noteId.includes("s")
-                ? "bg-black text-white h-24 w-5 z-20 absolute top-0 left-1/2 transform -translate-x-1/2"
-                : "bg-white text-black h-40 w-8 mr-1 z-10"
-            } ${
-              activeKey === key && !isBracketPressed
-                ? "bg-blue-500 text-white"
-                : ""
-            }`}
+            className={`border border-black cursor-pointer flex justify-center items-end
+        ${
+          noteId.includes("s")
+            ? `${
+                activeKey === key && !isBracketPressed
+                  ? "bg-blue-500 text-white h-24 w-5 z-20 absolute top-0 left-1/2 transform -translate-x-1/2"
+                  : "bg-black text-white h-24 w-5 z-20 absolute top-0 left-1/2 transform -translate-x-1/2"
+              }`
+            : `${
+                activeKey === key && !isBracketPressed
+                  ? "bg-blue-500 text-white h-40 w-8 mr-1 z-10"
+                  : "bg-white text-black h-40 w-8 mr-1 z-10"
+              }`
+        }`}
             data-note-id={noteId}
             onClick={handleKeyClick}
-            // when the "[" key is pressed and the active key is the same as the current key, change the background color
-            style={{
-              paddingBottom: "1rem",
-              backgroundColor:
-                activeKey === key && !isBracketPressed ? "#42a4eb" : null,
-              color: activeKey === key && !isBracketPressed ? "white" : null,
-            }}
           >
             {noteId}
           </button>
@@ -149,25 +147,22 @@ const Piano: React.FC = () => {
       {Object.entries(keyMap["side3"] || {}).map(([key, noteId]) => (
         <div key={key} className="relative">
           <button
-            key={key}
-            className={`border border-black cursor-pointer flex justify-center items-end ${
-              noteId.includes("s")
-                ? "bg-black text-white h-24 w-5 z-20 absolute top-0 left-1/2 transform -translate-x-1/2"
-                : "bg-white text-black h-40 w-8 mr-1 z-10"
-            } ${
-              activeKey === key && isBracketPressed
-                ? "bg-blue-500 text-white"
-                : ""
-            }`}
+            className={`border border-black cursor-pointer flex justify-center items-end
+        ${
+          noteId.includes("s")
+            ? `${
+                activeKey === key && isBracketPressed
+                  ? "bg-blue-500 text-white h-24 w-5 z-20 absolute top-0 left-1/2 transform -translate-x-1/2"
+                  : "bg-black text-white h-24 w-5 z-20 absolute top-0 left-1/2 transform -translate-x-1/2"
+              }`
+            : `${
+                activeKey === key && isBracketPressed
+                  ? "bg-blue-500 text-white h-40 w-8 mr-1 z-10"
+                  : "bg-white text-black h-40 w-8 mr-1 z-10"
+              }`
+        }`}
             data-note-id={noteId}
             onClick={handleKeyClick}
-            // when the "[" key is pressed and the active key is the same as the current key, change the background color
-            style={{
-              paddingBottom: "1rem",
-              backgroundColor:
-                activeKey === key && isBracketPressed ? "#42a4eb" : null,
-              color: activeKey === key && isBracketPressed ? "white" : null,
-            }}
           >
             {noteId}
           </button>
