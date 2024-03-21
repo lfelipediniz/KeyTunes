@@ -9,14 +9,13 @@ type KeyMap = {
 };
 
 const Piano: React.FC = () => {
-  // state to store the key map
+  // to store the key map
   const [keyMap, setKeyMap] = useState<KeyMap>({});
-  // state to store the active key
+  // to store the active key
   const [activeKey, setActiveKey] = useState<string | null>(null);
-  // state to track whether the "[" key is pressed
+  // to track whether the "[" key is pressed
   const [isBracketPressed, setIsBracketPressed] = useState<boolean>(false);
-
-  // state to track the current side of keys
+  // to track the current side of keys
   const [keySide, setKeySide] = useState<"alternativeKeys" | "side2">("side2");
 
   useEffect(() => {
@@ -32,7 +31,6 @@ const Piano: React.FC = () => {
     };
 
     loadKeyMap();
-
     // add event listeners for keydown and keyup events
     const handleKeyDown = (event: KeyboardEvent) => {
       if (event.key === "[") {
@@ -41,13 +39,8 @@ const Piano: React.FC = () => {
       }
 
       const side = isBracketPressed ? "alternativeKeys" : "side2";
-
       const keyCombo = `${event.shiftKey ? "Shift + " : ""}${event.code}`;
-
-      const noteId =
-        keyMap[side] && keyMap[side][keyCombo]
-          ? keyMap[side][keyCombo]
-          : keyMap["side2"][keyCombo];
+      const noteId = keyMap[side]?.[keyCombo] || keyMap["side2"]?.[keyCombo];
 
       if (noteId) {
         setActiveKey(keyCombo);
@@ -64,7 +57,6 @@ const Piano: React.FC = () => {
 
     window.addEventListener("keydown", handleKeyDown);
     window.addEventListener("keyup", handleKeyUp);
-
     // cleanup the event listeners
     return () => {
       window.removeEventListener("keydown", handleKeyDown);
@@ -72,7 +64,6 @@ const Piano: React.FC = () => {
     };
   }, [keyMap, isBracketPressed]);
 
-  // function to play audio
   const playAudio = (noteId: string) => {
     const audio = new Audio(`/notes/${noteId}.wav`);
     audio
@@ -83,91 +74,67 @@ const Piano: React.FC = () => {
       .catch((error) => console.error("Error playing audio", error));
   };
 
-  // function to handle key click
-  const handleKeyClick = (event: React.MouseEvent<HTMLButtonElement>) => {
-    const noteId = event.currentTarget.dataset.noteId;
-    if (noteId) {
-      setActiveKey(noteId);
-      playAudio(noteId);
-    }
+  const handleKeyClick = (noteId: string) => {
+    setActiveKey(noteId);
+    playAudio(noteId);
   };
 
+  const renderPianoKey = (key: string, noteId: string, side: string) => {
+    const isSharp = noteId.includes("s");
+
+    // determines whether the key should be considered active based on the state of isBracketPressed
+    // and which side the key belongs to
+    const isActive =
+      activeKey === key &&
+      ((isBracketPressed && (side === "side1" || side === "side3")) ||
+        (!isBracketPressed && side === "side2"));
+
+    const baseClasses =
+      "border border-black cursor-pointer flex justify-center items-end";
+    const sharpClasses =
+      "h-24 w-5 z-20 absolute top-0 left-1/2 transform -translate-x-1/2";
+    const naturalClasses = "h-40 w-8 mr-1 z-10";
+    const activeClasses = "bg-blue-500 text-white";
+    const inactiveSharpClasses = "bg-black text-white";
+    const inactiveNaturalClasses = "bg-white text-black";
+
+    // determine the class names based on the state of the key
+    const className = `${baseClasses} ${
+      isSharp ? sharpClasses : naturalClasses
+    } ${
+      isActive
+        ? activeClasses
+        : isSharp
+        ? inactiveSharpClasses
+        : inactiveNaturalClasses
+    }`;
+
+    // return the button element with the appropriate class names and event handler
+    return (
+      <div key={key} className="relative">
+        <button
+          className={className}
+          data-note-id={noteId}
+          onClick={() => handleKeyClick(noteId)}
+        >
+          {noteId}
+        </button>
+      </div>
+    );
+  };
+
+  // adjustment of component return to pass 'side' as a parameter to renderPianoKey
   return (
     <div className="flex relative select-none">
-      {Object.entries(keyMap["side1"] || {}).map(([key, noteId]) => (
-        <div key={key} className="relative">
-          <button
-            className={`border border-black cursor-pointer flex justify-center items-end
-        ${
-          noteId.includes("s")
-            ? `${
-                activeKey === key && isBracketPressed
-                  ? "bg-blue-500 text-white h-24 w-5 z-20 absolute top-0 left-1/2 transform -translate-x-1/2"
-                  : "bg-black text-white h-24 w-5 z-20 absolute top-0 left-1/2 transform -translate-x-1/2"
-              }`
-            : `${
-                activeKey === key && isBracketPressed
-                  ? "bg-blue-500 text-white h-40 w-8 mr-1 z-10"
-                  : "bg-white text-black h-40 w-8 mr-1 z-10"
-              }`
-        }`}
-            data-note-id={noteId}
-            onClick={handleKeyClick}
-          >
-            {noteId}
-          </button>
-        </div>
-      ))}
-
-      {Object.entries(keyMap["side2"] || {}).map(([key, noteId]) => (
-        <div key={key} className="relative">
-          <button
-            className={`border border-black cursor-pointer flex justify-center items-end
-        ${
-          noteId.includes("s")
-            ? `${
-                activeKey === key && !isBracketPressed
-                  ? "bg-blue-500 text-white h-24 w-5 z-20 absolute top-0 left-1/2 transform -translate-x-1/2"
-                  : "bg-black text-white h-24 w-5 z-20 absolute top-0 left-1/2 transform -translate-x-1/2"
-              }`
-            : `${
-                activeKey === key && !isBracketPressed
-                  ? "bg-blue-500 text-white h-40 w-8 mr-1 z-10"
-                  : "bg-white text-black h-40 w-8 mr-1 z-10"
-              }`
-        }`}
-            data-note-id={noteId}
-            onClick={handleKeyClick}
-          >
-            {noteId}
-          </button>
-        </div>
-      ))}
-
-      {Object.entries(keyMap["side3"] || {}).map(([key, noteId]) => (
-        <div key={key} className="relative">
-          <button
-            className={`border border-black cursor-pointer flex justify-center items-end
-        ${
-          noteId.includes("s")
-            ? `${
-                activeKey === key && isBracketPressed
-                  ? "bg-blue-500 text-white h-24 w-5 z-20 absolute top-0 left-1/2 transform -translate-x-1/2"
-                  : "bg-black text-white h-24 w-5 z-20 absolute top-0 left-1/2 transform -translate-x-1/2"
-              }`
-            : `${
-                activeKey === key && isBracketPressed
-                  ? "bg-blue-500 text-white h-40 w-8 mr-1 z-10"
-                  : "bg-white text-black h-40 w-8 mr-1 z-10"
-              }`
-        }`}
-            data-note-id={noteId}
-            onClick={handleKeyClick}
-          >
-            {noteId}
-          </button>
-        </div>
-      ))}
+      {Object.entries(keyMap["side1"] || {}).map(([key, noteId]) =>
+        renderPianoKey(key, noteId, "side1")
+      )}
+      {Object.entries(keyMap["side2"] || {}).map(([key, noteId]) =>
+        renderPianoKey(key, noteId, "side2")
+      )}
+      {Object.entries(keyMap["side3"] || {}).map(([key, noteId]) =>
+        renderPianoKey(key, noteId, "side3")
+      )}
     </div>
   );
 };
