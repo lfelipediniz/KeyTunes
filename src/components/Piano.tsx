@@ -68,7 +68,7 @@ const Piano: React.FC = () => {
   }, [keyMap, activeKeys, isBracketPressed]);
 
   const playAudio = (noteId: string) => {
-    const audio = new Audio(`/notes/${noteId}.wav`);
+    const audio = new Audio(`/notes/${noteId}.mp3`);
     audio
       .play()
       .then(() => {})
