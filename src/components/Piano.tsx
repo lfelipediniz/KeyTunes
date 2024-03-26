@@ -11,8 +11,8 @@ type KeyMap = {
 const Piano: React.FC = () => {
   // to store the key map
   const [keyMap, setKeyMap] = useState<KeyMap>({});
-  // to store the active key
-  const [activeKey, setActiveKey] = useState<string | null>(null);
+  // to store the active keys
+  const [activeKeys, setActiveKeys] = useState<string[]>([]);
   // to track whether the "[" key is pressed
   const [isBracketPressed, setIsBracketPressed] = useState<boolean>(false);
   // to track the current side of keys
@@ -42,8 +42,8 @@ const Piano: React.FC = () => {
       const keyCombo = `${event.shiftKey ? "Shift + " : ""}${event.code}`;
       const noteId = keyMap[side]?.[keyCombo] || keyMap["side2"]?.[keyCombo];
 
-      if (noteId) {
-        setActiveKey(keyCombo);
+      if (noteId && !activeKeys.includes(keyCombo)) {
+        setActiveKeys((prevKeys) => [...prevKeys, keyCombo]);
         playAudio(noteId);
       }
     };
@@ -53,6 +53,9 @@ const Piano: React.FC = () => {
         setIsBracketPressed(false);
         setKeySide("side2"); // update key side when '[' key is released
       }
+
+      const keyCombo = `${event.shiftKey ? "Shift + " : ""}${event.code}`;
+      setActiveKeys((prevKeys) => prevKeys.filter((key) => key !== keyCombo));
     };
 
     window.addEventListener("keydown", handleKeyDown);
@@ -62,20 +65,18 @@ const Piano: React.FC = () => {
       window.removeEventListener("keydown", handleKeyDown);
       window.removeEventListener("keyup", handleKeyUp);
     };
-  }, [keyMap, isBracketPressed]);
+  }, [keyMap, activeKeys, isBracketPressed]);
 
   const playAudio = (noteId: string) => {
     const audio = new Audio(`/notes/${noteId}.wav`);
     audio
       .play()
-      .then(() => {
-        setTimeout(() => setActiveKey(null), 200);
-      })
+      .then(() => {})
       .catch((error) => console.error("Error playing audio", error));
   };
 
   const handleKeyClick = (noteId: string) => {
-    setActiveKey(noteId);
+    // No need to change the active state on click for now
     playAudio(noteId);
   };
 
@@ -85,7 +86,7 @@ const Piano: React.FC = () => {
     // determines whether the key should be considered active based on the state of isBracketPressed
     // and which side the key belongs to
     const isActive =
-      activeKey === key &&
+      activeKeys.includes(key) &&
       ((isBracketPressed && (side === "side1" || side === "side3")) ||
         (!isBracketPressed && side === "side2"));
 
@@ -115,7 +116,8 @@ const Piano: React.FC = () => {
         <button
           className={className}
           data-note-id={noteId}
-          onClick={() => handleKeyClick(noteId)}
+          onMouseDown={() => handleKeyClick(noteId)}
+          onMouseUp={() => handleKeyUp(noteId)}
         >
           {noteId}
         </button>
