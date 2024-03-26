@@ -110,6 +110,7 @@ const Piano: React.FC = () => {
         : inactiveNaturalClasses
     }`;
 
+
     // return the button element with the appropriate class names and event handler
     return (
       <div key={key} className="relative">
@@ -117,7 +118,6 @@ const Piano: React.FC = () => {
           className={className}
           data-note-id={noteId}
           onMouseDown={() => handleKeyClick(noteId)}
-          onMouseUp={() => handleKeyUp(noteId)}
         >
           {noteId}
         </button>
