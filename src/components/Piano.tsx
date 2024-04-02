@@ -29,7 +29,7 @@ const Piano: React.FC = () => {
         console.error("Error loading piano keys", error);
       }
     };
-  
+
     loadKeyMap();
     // add event listeners for keydown and keyup events
     const handleKeyDown = (event: KeyboardEvent) => {
@@ -37,7 +37,7 @@ const Piano: React.FC = () => {
         setIsBracketPressed(true);
         setKeySide("alternativeKeys"); // update key side when '[' key is pressed
       }
-  
+
       const side = isBracketPressed ? "alternativeKeys" : "side2";
       const keyCombo = `${event.shiftKey ? "Shift + " : ""}${event.code}`;
 
@@ -46,25 +46,25 @@ const Piano: React.FC = () => {
         // if the command does not exist, switch to side2
         return;
       }
-  
+
       const noteId = keyMap[side]?.[keyCombo] || keyMap["side2"]?.[keyCombo];
-  
+
       if (noteId && !activeKeys.includes(keyCombo)) {
         setActiveKeys((prevKeys) => [...prevKeys, keyCombo]);
         playAudio(noteId);
       }
     };
-  
+
     const handleKeyUp = (event: KeyboardEvent) => {
       if (event.key === "[") {
         setIsBracketPressed(false);
         setKeySide("side2"); // update key side when '[' key is released
       }
-  
+
       const keyCombo = `${event.shiftKey ? "Shift + " : ""}${event.code}`;
       setActiveKeys((prevKeys) => prevKeys.filter((key) => key !== keyCombo));
     };
-  
+
     window.addEventListener("keydown", handleKeyDown);
     window.addEventListener("keyup", handleKeyUp);
     // cleanup the event listeners
@@ -73,7 +73,7 @@ const Piano: React.FC = () => {
       window.removeEventListener("keyup", handleKeyUp);
     };
   }, [keyMap, activeKeys, isBracketPressed]);
-  
+
   const playAudio = (noteId: string) => {
     const audio = new Audio(`/notes/${noteId}.mp3`);
     audio
@@ -117,6 +117,10 @@ const Piano: React.FC = () => {
         : inactiveNaturalClasses
     }`;
 
+    // Split the key combo to display only the relevant key without modifiers
+    // Assuming the format is "Shift + KeyX", "Digit1", or "KeyX"
+    const displayKey = key.split(" ").pop().replace(/^Key|^Digit/, "");
+
 
     // return the button element with the appropriate class names and event handler
     return (
@@ -126,11 +130,12 @@ const Piano: React.FC = () => {
           data-note-id={noteId}
           onMouseDown={() => handleKeyClick(noteId)}
         >
-          {noteId}
+          {displayKey} {/* Use the processed displayKey for the button label */}
         </button>
       </div>
     );
-  };
+};
+
 
   // adjustment of component return to pass 'side' as a parameter to renderPianoKey
   return (
