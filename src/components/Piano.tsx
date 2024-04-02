@@ -119,7 +119,8 @@ const Piano: React.FC = () => {
 
     // Split the key combo to display only the relevant key without modifiers
     // Assuming the format is "Shift + KeyX", "Digit1", or "KeyX"
-    const displayKey = key.split(" ").pop().replace(/^Key|^Digit/, "");
+    const displayKey = (key.split(" ").pop() ?? "").replace(/^Key|^Digit/, "");
+
 
 
     // return the button element with the appropriate class names and event handler
